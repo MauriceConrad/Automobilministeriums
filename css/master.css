@@ -13,6 +13,13 @@ body {
   right: 0;
   left: 0;
 }
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
+* {
+  scrollbar-width: none !important;
+}
 main {
   height: 100%;
   display: block;
@@ -25,6 +32,8 @@ main {
 }
 .swiper-slide {
   position: relative;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 .title {
   font-family: 'Jost';
@@ -43,6 +52,12 @@ main {
   top: 50%;
   transform: translateY(-50%);
 }
+@media screen and (max-width: 650px) {
+  .swiper-slide .content:not(.center-mobile) {
+    transform: none;
+    top: 0;
+  }
+}
 .paragraph {
   font-family: 'Jost';
   font-weight: 700;
@@ -50,6 +65,11 @@ main {
   font-size: 2.4em;
   text-align: center;
   max-width: 1000px !important;
+}
+@media screen and (max-width: 650px) {
+  .paragraph {
+    font-size: 2em;
+  }
 }
 .marked {
   display: inline-block;
@@ -76,17 +96,43 @@ main {
   font-weight: 700;
 
 }
+@media screen and (max-width: 650px) {
+  .quote-text {
+    font-size: 2.8em;
+  }
+}
 .quote-author {
   font-size: 2.5em;
   font-weight: 300;
+}
+@media screen and (max-width: 650px) {
+  .quote-author {
+    font-size: 2em;
+  }
 }
 .clap-container {
   display: flex;
   margin: 30px 0;
   max-width: 1000px !important;
 }
+@media screen and (max-width: 650px) {
+  .clap-container {
+    display: block;
+  }
+}
 .clap-container .actions-list {
   flex: none;
+}
+.clap-container .actions-list.mobile {
+  display: none;
+}
+@media screen and (max-width: 650px) {
+  .clap-container .actions-list.desktop {
+    display: none;
+  }
+  .clap-container .actions-list.mobile {
+    display: block;
+  }
 }
 .clap-container .actions-list ul {
   list-style: none;
@@ -94,7 +140,11 @@ main {
 .clap-container .actions-list ul li {
   list-style: none;
   margin: 20px 0;
+  cursor: pointer;
 
+}
+.clap-container .actions-list ul li a {
+  text-decoration: none;
 }
 .clap-container .actions-list ul li .icon {
   display: inline-block;
@@ -113,6 +163,11 @@ main {
   font-weight: 400;
   vertical-align: middle;
 }
+@media screen and (max-width: 650px) {
+  .clap-container .actions-list ul li span {
+    font-size: 1.4em;
+  }
+}
 .clap-container .clap-view {
   flex: 1;
 
@@ -125,7 +180,6 @@ main {
   transition: all 0.5s;
   animation-duration: 1200ms;
 }
-
 .clap-container .clap-view .clap-symbol svg {
   width: 100%;
   height: 100%;
@@ -158,8 +212,82 @@ main {
 }
 .footer ul.links li {
   display: inline-block;
+  cursor: pointer;
 }
 .footer a {
   color: inherit;
   text-decoration: none;
+}
+
+
+.overlay {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 0.8;
+  z-index: 99;
+  opacity: 0;
+}
+.overlay.show {
+  display: block;
+}
+.popup {
+  position: fixed;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  left: 10px;
+  top: 10px;
+  border: 1px solid #d2d2d2;
+  border-radius: 8px;
+  background-color: #fff;
+  z-index: 100;
+  display: none;
+  transform: translateY(-110%);
+}
+.popup.show {
+  display: block;
+}
+.popup header {
+  display: flex;
+}
+.popup header > * {
+  flex: 1;
+}
+.popup .btn-close {
+  height: 60px;
+  width: 60px;
+  flex: none;
+  margin: 10px;
+}
+.popup .btn-close svg {
+  width: 100%;
+  height: 100%;
+}
+.popup header .title {
+  vertical-align: middle;
+  font-size: 1rem;
+  max-width: none !important;
+}
+.popup header .title:before {
+  height: 100%;
+  width: 0;
+  content: " ";
+  vertical-align: middle;
+  display: inline-block;
+}
+.popup header .title h1 {
+  margin: 0;
+  font-size: 2em;
+  vertical-align: middle;
+  display: inline-block;
+}
+.popup main {
+  padding: 0 10px;
+  font-family: 'Jost';
+  box-sizing: border-box;
+  text-align: center;
 }
