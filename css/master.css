@@ -144,7 +144,7 @@ main {
 
 }
 .clap-container .actions-list ul li a {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 .clap-container .actions-list ul li .icon {
   display: inline-block;
@@ -204,7 +204,7 @@ main {
   font-weight: 400;
   color: #282828;
   font-size: 1.3em;
-  margin: 40px 0 0;
+  margin: 10px 0 0;
 }
 .footer ul.links {
   list-style: none;

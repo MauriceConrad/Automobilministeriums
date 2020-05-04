@@ -6,11 +6,15 @@
     fadeEffect: {
       crossFade: true
     },
+    scrollbar: {
+      el: '.swiper-scrollbar',
+      draggable: true,
+    },
     effect: 'fade',
-    pagination: {
+    /*pagination: {
       el: '.swiper-pagination',
       type: 'bullets',
-    },
+    },*/
   });
 
 
@@ -30,7 +34,7 @@
 
     const countSpan = document.querySelector('.clap-count span');
 
-    fetch('data/claps.txt').then(response => response.text()).then(count => {
+    fetch('data/claps.txt?' + Date.now()).then(response => response.text()).then(count => {
       while (countSpan.childNodes.length > 0) countSpan.removeChild(countSpan.childNodes[0]);
       countSpan.append(count);
     });
