@@ -4,6 +4,10 @@ html{
   height: 100%;
   margin: 0;
 }
+html, * {
+  -webkit-overflow-scrolling: touch;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 body {
   min-height: 100%;
   margin: 0;
@@ -90,10 +94,13 @@ main {
 .quote {
   text-align: center;
   color: #5d5d5d;
+  margin: 10px 0 0;
 }
 .quote-text {
   font-size: 3.5em;
   font-weight: 700;
+  line-height: 1.2em;
+  word-wrap: break-word;
 
 }
 @media screen and (max-width: 650px) {
@@ -180,6 +187,12 @@ main {
   transition: all 0.5s;
   animation-duration: 1200ms;
 }
+@media screen and (max-width: 650px) {
+  .clap-container .clap-view .clap-symbol {
+    width: 120px;
+    height: 120px;
+  }
+}
 .clap-container .clap-view .clap-symbol svg {
   width: 100%;
   height: 100%;
@@ -187,16 +200,33 @@ main {
 /*.clap-container .clap-view .clap-symbol:hover {
   transform: scale(1.05);
 }*/
+.clap-info {
+  margin: 10px 0 0;
+  display: block;
+  text-align: center;
 
+}
 .clap-container .clap-view .clap-count {
+  text-align: center;
+  margin: 30px 0 0;
+}
+
+.clap-container .clap-view .clap-count span {
   color: #FF005C;
   font-family: 'Jost';
   font-size: 4em;
   font-weight: 900;
   text-align: center;
-  margin: 30px 0;
+  margin: 30px 0 0;
 }
-
+.counter-label {
+  display: block;
+  text-align: center;
+  color: #333;
+  font-family: 'Jost';
+  font-size: 1em;
+  font-weight: 300;
+}
 
 
 .footer {
@@ -209,10 +239,14 @@ main {
 .footer ul.links {
   list-style: none;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 .footer ul.links li {
   display: inline-block;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
 }
 .footer a {
   color: inherit;
@@ -247,6 +281,11 @@ main {
   z-index: 100;
   display: none;
   transform: translateY(-110%);
+  overflow: scroll;
+  padding: 10px 0 20px 0;
+  box-sizing: border-box;
+  font-size: 1.2em;
+
 }
 .popup.show {
   display: block;
@@ -290,4 +329,29 @@ main {
   font-family: 'Jost';
   box-sizing: border-box;
   text-align: center;
+
+}
+.popup main p {
+  text-align: justify;
+}
+
+
+
+.emblem {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  width: 200px;
+  height: calc(200px * (520 / 1078));
+}
+@media screen and (max-width: 350px) {
+  .emblem {
+    width: 100px;
+    height: calc(100px * (520 / 1078));
+  }
+}
+.emblem img {
+  width: 100%;
+  height: 100%;
+
 }

@@ -18,51 +18,90 @@
   });
 
 
-  const stayTime = [3000, 6000];
-  function waitForPage(i) {
-    setTimeout(() => {
-      mySwiper.slideNext();
-      i++;
-      if (i in stayTime) {
-        waitForPage(i);
-      }
-    }, stayTime[i]);
-  }
-  waitForPage(0);
 
   function updateCount() {
 
-    const countSpan = document.querySelector('.clap-count span');
+    return new Promise(function(resolve, reject) {
+      const countSpan = document.querySelector('.clap-count span');
 
-    fetch('data/claps.txt?' + Date.now()).then(response => response.text()).then(count => {
-      while (countSpan.childNodes.length > 0) countSpan.removeChild(countSpan.childNodes[0]);
-      countSpan.append(count);
+      fetch('/api/claps.php').then(response => response.json()).then(result => {
+        clearNode(countSpan);
+        const claps = result.claps.toString();
+        const clapsStr = ((str) => {
+          const parts = [];
+          for (var i = 0; i < Math.ceil(str.length / 3); i++) {
+            const endPos = str.length - i * 3;
+            console.log(str, endPos - 3, endPos);
+            parts.push(str.substring(endPos - 3, endPos));
+          }
+          return parts.reverse().join(".");
+        })(claps);
+
+        countSpan.append(clapsStr);
+        resolve(result.claps);
+      });
+
+      /*fetch('/data/claps.txt?' + Date.now()).then(response => response.text()).then(count => {
+        clearNode(countSpan);
+        countSpan.append(count);
+        resolve(Number(count));
+      });*/
     });
+  }
+  function clearNode(e) {
+    while (e.childNodes.length > 0) e.removeChild(e.childNodes[0]);
   }
 
   updateCount();
 
-  const endpoint = 'clap.php';
+  const endpoint = '/api/clap.php';
+
+  function getDateId(date) {
+    return new String() + date.getFullYear() + date.getMonth() + date.getDate()
+  }
 
   window.addEventListener("load", function() {
+
     const clapButton = document.querySelector(".clap-symbol");
     clapButton.addEventListener("click", function() {
-      fetch(endpoint).then(response => {
-        updateCount();
-        return response.json();
-      }).then(result => {
 
-        if (result.success) {
 
-        }
-        else {
-          alert("Du hast heute schon genug geklatscht. 🚗");
-        }
+      const dateId = getDateId(new Date());
+
+
+      const claps = JSON.parse(localStorage.getItem("claps") || '{}');
+      let clapsToday = claps[dateId] || 0;
 
 
 
+      if (clapsToday < 10) {
+        const audio = new Audio('/assets/applause.mp3');
+        audio.currentTime = 0;
+        audio.volume = 0.5;
+        audio.play();
 
-      });
+        const countSpan = document.querySelector('.clap-count span');
+        const newCount = Number(countSpan.innerHTML.replace(/\./g, "")) + 1;
+        //clearNode(countSpan);
+        //countSpan.append(newCount);
+
+        fetch(endpoint).then(response => {
+          updateCount();
+          return response.json();
+        }).then(result => {
+
+        });
+        clapsToday++;
+
+        claps[dateId] = clapsToday;
+
+        localStorage.setItem("claps", JSON.stringify(claps));
+      }
+      else {
+        alert("Du kannst nur zehnmal pro Tag applaudieren!");
+      }
+
+
 
       anime({
         targets: '.clappers',
@@ -170,4 +209,123 @@
       overlay.classList.remove("show");
     }, duration);
   }
+
+  const quotes = [
+    {
+      text: "“Wir brauchen die Prämie unabhängig von der Antriebsart, für das gesamte Produktangebot.”",
+      author: "Herbert Diess (VW Chef)",
+      fontSize: '2.6em'
+    },
+    {
+      text: "Moderne Verbrennungsmotoren = “erheblicher Beitrag für Umwelt- und Klimaschutz”",
+      author: "Hildegard Müller (Chefin der Autolobby)",
+      fontSize: '2.4em'
+    },
+    {
+      text: "“Die nächsten Wochen werden entscheidend sein. Daher keine Grundsatzdiskussionen, sondern Fokus auf die Konjunktur und Tempo. Sonst rennt uns die Zeit davon.”",
+      author: "Herbert Diess (VW Chef)",
+      fontSize: '1.9em'
+    },
+    {
+      text: "“Das ist jetzt nicht die Zeit, über weitere Verschärfungen bei der CO2-Regulierung nachzudenken.”",
+      author: "Hildegard Müller (Chefin der Autolobby)",
+      fontSize: '2.6em'
+    }
+  ];
+
+
+  function setQuote(quote, duration = 250) {
+    const quoteText = document.querySelector(".quote-text");
+    const quoteAuthor = document.querySelector(".quote-author");
+
+    anime({
+      targets: quoteText,
+      opacity:  0,
+      duration: duration,
+      easing: 'linear',
+      autoplay: true,
+      loop: false
+    });
+    anime({
+      targets: quoteAuthor,
+      opacity:  0,
+      duration: duration,
+      easing: 'linear',
+      autoplay: true,
+      loop: false
+    });
+
+
+    setTimeout(() => {
+      clearNode(quoteText);
+      clearNode(quoteAuthor);
+
+      quoteText.append(quote.text);
+      quoteAuthor.append(quote.author);
+
+      quoteText.style.fontSize = quote.fontSize;
+
+      anime({
+        targets: quoteText,
+        opacity:  1,
+        duration: duration,
+        easing: 'linear',
+        autoplay: true,
+        loop: false
+      });
+      anime({
+        targets: quoteAuthor,
+        opacity:  1,
+        duration: duration,
+        easing: 'linear',
+        autoplay: true,
+        loop: false
+      });
+    }, duration);
+
+  }
+
+  window.addEventListener("load", function() {
+
+    let i = 0;
+
+    setInterval(() => {
+      i++;
+
+      setQuote(quotes[i % quotes.length], 300);
+
+
+    }, 10000);
+
+
+    setQuote(quotes[i % quotes.length], 100);
+  });
+
+  window.addEventListener("load", function() {
+    let lastValue = 0;
+    setInterval(() => {
+      updateCount().then(count => {
+        if (count != lastValue) {
+
+        }
+        lastValue = count;
+      });
+    }, 500);
+  });
+
+
+
+  window.addEventListener("load", function() {
+    const stayTime = [3000, 6000];
+    function waitForPage(i) {
+      setTimeout(() => {
+        mySwiper.slideNext();
+        i++;
+        if (i in stayTime) {
+          waitForPage(i);
+        }
+      }, stayTime[i]);
+    }
+    waitForPage(0);
+  });
 })();
